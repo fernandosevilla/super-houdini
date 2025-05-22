@@ -45,4 +45,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Relaciones
+
+    /**
+     * Relación con Zona
+     */
+    public function zonas() {
+        return $this->belongsToMany(Zona::class, 'zona_usuario')
+                    ->withPivot('estado', 'fecha_solicitud', 'fecha_respuesta')
+                    ->withTimestamps();
+    }
+
+    public function zonas_creadas() {
+        return $this->hasMany(Zona::class, 'user_id');
+    }
+
+    public function credenciales() {
+        return $this->hasMany(Credencial::class, 'creado_por');
+    }
+
+    public function rotaciones() {
+        return $this->hasMany(Rotacion::class);
+    }
 }
