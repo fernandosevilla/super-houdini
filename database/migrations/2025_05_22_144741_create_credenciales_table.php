@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->string('nombre_sitio')->nullable();
             $table->string('nombre_usuario')->nullable();
-            $table->string('contrasenia', 255);
+            $table->text('contrasenia');
             $table->string('url', 255)->nullable();
             $table->text('notas')->nullable();
 
