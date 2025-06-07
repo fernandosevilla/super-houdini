@@ -26,9 +26,11 @@
                 <div class="bg-neutral-50 dark:bg-neutral-900 rounded-lg shadow p-4 flex flex-col justify-between">
                     <div>
                         <h3 class="text-lg font-medium dark:text-white">{{ $cred->nombre_sitio }}</h3>
+
                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                             Usuario: {{ $cred->nombre_usuario ?? '—' }}
                         </p>
+
                         @if ($cred->url)
                             <p class="text-sm text-blue-500 mt-1">
                                 <a href="{{ $cred->url }}" target="_blank" class="hover:underline">
@@ -36,9 +38,28 @@
                                 </a>
                             </p>
                         @endif
+
                         <p class="text-xs text-gray-400 mt-2">
                             Creada el {{ $cred->created_at->format('d/m/Y') }}
                         </p>
+
+                        @if ($cred->fecha_ultima_rotacion)
+                            @php $dias = $cred->dias_para_rotacion; @endphp
+
+                            @if ($dias > 0)
+                                <p class="text-sm text-yellow-500 mt-2">
+                                    Se rotará en {{ $dias }} día{{ $dias !== 1 ? 's' : '' }}
+                                </p>
+                            @elseif ($dias === 0)
+                                <p class="text-sm text-red-500 mt-2">
+                                    Se rota hoy
+                                </p>
+                            @else
+                                <p class="text-sm text-red-500 mt-2">
+                                    Rotación vencida hace {{ abs($dias) }} día{{ abs($dias) !== 1 ? 's' : '' }}
+                                </p>
+                            @endif
+                        @endif
                     </div>
                     <div class="mt-4 flex justify-end">
                         <div x-data="{ isOpen: false, openedWithKeyboard: false }"

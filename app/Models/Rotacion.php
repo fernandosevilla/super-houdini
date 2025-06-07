@@ -17,6 +17,8 @@ class Rotacion extends Model
         'user_id',
         'fecha_rotacion',
         'notas',
+        'old_contrasenia',
+        'new_contrasenia',
     ];
 
     protected $casts = [
