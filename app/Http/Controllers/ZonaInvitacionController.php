@@ -8,26 +8,34 @@ use Illuminate\Support\Facades\Auth;
 
 class ZonaInvitacionController extends Controller
 {
-    public function aceptar($token)
-    {
+    public function aceptar($token) {
         $inv = EnlaceTemporal::where('token', $token)
-            ->whereNotNull('zona_id')
-            ->where('expira_en', '>=', now())
+            ->where('usado', false)
             ->firstOrFail();
 
-        $user = Auth::user();
+        $zona = $inv->zona;
+        $usuario = Auth::user();
 
-        // añade al pivot zona_usuario sin duplicar
-        $inv->zona->usuarios()->syncWithoutDetaching([
-            $user->id => [
-                'estado' => 'aceptado',
-                'fecha_solicitud' => now(),
-                'fecha_respuesta' => now(),
-            ]
-        ]);
-
+        // marcar el enlace como usado
         $inv->update(['usado' => true]);
 
-        return redirect()->route('zonas.show', $inv->zona_id);
+        if ($zona->requiere_verificacion) {
+            // crear la solicitud como 'pendiente'
+            $zona->usuarios()->attach($usuario->id, [
+                'estado' => 'pendiente',
+                'fecha_solicitud' => now(),
+            ]);
+
+            return view('zonas.solicitud-enviada', compact('zona'));
+        } else {
+            // adjuntar directamente como 'aceptado'
+            $zona->usuarios()->attach($usuario->id, [
+                'estado' => 'aceptado',
+                'fecha_respuesta' => now(),
+            ]);
+
+            return redirect()->route('zonas.show', $zona);
+        }
     }
+
 }

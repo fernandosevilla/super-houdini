@@ -161,6 +161,37 @@ class ListaZonas extends Component
         $this->requiereVerificacion = false;
     }
 
+    public function getSolicitudesPendientesProperty() {
+        return Zona::where('user_id', Auth::id())
+            ->whereHas('usuarios', fn($q) => $q->where('estado', 'pendiente'))
+            ->with(['usuarios' => fn($q) => $q->where('estado', 'pendiente')])
+            ->get();
+    }
+
+    public function responderSolicitud($zonaId, $userId, $respuesta)
+    {
+        $zona = Zona::findOrFail($zonaId);
+        $this->authorize('update', $zona);
+
+        if ($respuesta === 'rechazado') {
+            $zona->usuarios()->detach($userId);
+        } else {
+            $zona->usuarios()->updateExistingPivot($userId, [
+                'estado' => 'aceptado',
+                'fecha_respuesta' => now(),
+            ]);
+        }
+    }
+
+    public function salirZona(int $zonaId)
+    {
+        $zona = Zona::findOrFail($zonaId);
+
+        $this->authorize('view', $zona);
+
+        $zona->usuarios()->detach(Auth::id());
+    }
+
     public function render()
     {
         $usuario = Auth::user();
@@ -174,9 +205,16 @@ class ListaZonas extends Component
             ->orderByPivot('updated_at', 'desc')
             ->paginate(3);
 
+        $solicitudesPendientes = Zona::where('user_id', $usuario->id)
+            ->whereHas('usuarios', fn($q) => $q->where('estado', 'pendiente'))
+            ->with(['usuarios' => fn($q) => $q->where('estado', 'pendiente')])
+            ->paginate(3);
+
+
         return view('livewire.zonas.lista-zonas', [
             'zonasCreadas' => $zonasCreadas,
             'zonasCompartidas' => $zonasCompartidas,
+            'solicitudesPendientes' => $solicitudesPendientes,
         ]);
     }
 }

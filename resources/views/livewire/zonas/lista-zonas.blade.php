@@ -118,7 +118,8 @@
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @foreach ($zonasCompartidas as $zona)
-                    <div class="bg-neutral-50 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300 shadow-lg rounded-lg p-4 flex flex-col justify-between">
+                    <div
+                        class="bg-neutral-50 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300 shadow-lg rounded-lg p-4 flex flex-col justify-between">
                         <div>
                             <h3 class="text-lg font-medium dark:text-gray-200">{{ $zona->nombre }}</h3>
                             <p class="text-xs text-gray-400 mt-1">
@@ -126,11 +127,46 @@
                                 {{ optional($zona->pivot->fecha_respuesta)->format('d/m/Y') ?? '—' }}
                             </p>
                         </div>
+
                         <div class="mt-4 flex justify-end">
-                            <a href="{{ route('zonas.show', $zona) }}"
-                               class="whitespace-nowrap rounded-md bg-black px-4 py-2 text-sm font-medium text-neutral-100 hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:bg-white dark:text-black dark:focus-visible:outline-white">
-                                Ver
-                            </a>
+                            <div x-data="{ isOpenCompartidas: false, openedWithKeyboardCompartidas: false }"
+                                x-on:keydown.esc.window="isOpenCompartidas = false; openedWithKeyboardCompartidas = false"
+                                class="relative w-fit">
+                                {{-- Botón desplegable “Acciones” --}}
+                                <button type="button" x-on:click="isOpenCompartidas = ! isOpenCompartidas"
+                                    x-on:keydown.space.prevent="openedWithKeyboardCompartidas = true"
+                                    x-on:keydown.enter.prevent="openedWithKeyboardCompartidas = true"
+                                    x-on:keydown.down.prevent="openedWithKeyboardCompartidas = true"
+                                    class="inline-flex items-center gap-2 whitespace-nowrap rounded-md bg-neutral-50 px-4 py-2 text-sm font-medium tracking-wide transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800 dark:bg-neutral-900 dark:focus-visible:outline-neutral-300"
+                                    x-bind:class="(isOpenCompartidas || openedWithKeyboardCompartidas) ? 'text-neutral-900 dark:text-white' :
+                                    'text-neutral-600 dark:text-neutral-300'"
+                                    x-bind:aria-expanded="isOpenCompartidas || openedWithKeyboardCompartidas" aria-haspopup="true">
+                                    Acciones&nbsp;<i class="fa-solid fa-arrow-down"></i>
+                                </button>
+
+                                {{-- Menú desplegable --}}
+                                <div x-cloak x-show="isOpenCompartidas || openedWithKeyboardCompartidas" x-transition
+                                    x-trap="openedWithKeyboardCompartidas"
+                                    x-on:click.outside="isOpenCompartidas = false; openedWithKeyboardCompartidas = false"
+                                    x-on:keydown.down.prevent="$focus.wrap().next()"
+                                    x-on:keydown.up.prevent="$focus.wrap().previous()"
+                                    class="absolute top-11 flex w-fit min-w-48 flex-col divide-y divide-neutral-300 overflow-hidden rounded-md bg-neutral-50 dark:divide-neutral-700 dark:bg-neutral-900"
+                                    role="menu">
+                                    <div class="flex flex-col py-1.5">
+                                        <a href="{{ route('zonas.show', $zona) }}"
+                                            class="flex items-center gap-2 bg-neutral-50 px-4 py-2 text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 focus-visible:outline-hidden dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-50/5 dark:hover:text-white dark:focus-visible:bg-neutral-50/10 dark:focus-visible:text-white"
+                                            role="menuitem">
+                                            <i class="fa-solid fa-eye"></i> Ver
+                                        </a>
+
+                                        <button wire:click="salirZona({{ $zona->id }})"
+                                            class="flex items-center gap-2 bg-neutral-50 px-4 py-2 text-sm text-neutral-600 hover:bg-neutral-900/5 hover:text-neutral-900 focus-visible:bg-neutral-900/10 focus-visible:text-neutral-900 focus-visible:outline-hidden dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-50/5 dark:hover:text-white dark:focus-visible:bg-neutral-50/10 dark:focus-visible:text-white"
+                                            role="menuitem">
+                                            <i class="fa-solid fa-right-from-bracket"></i> Salir
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -141,6 +177,39 @@
             </div>
         @endif
     </section>
+
+    @if ($this->solicitudesPendientes->isNotEmpty())
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold dark:text-white mb-4">Solicitudes pendientes</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach ($this->solicitudesPendientes as $zona)
+                    @foreach ($zona->usuarios as $u)
+                        <div class="bg-neutral-50 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300 shadow-lg rounded-lg p-4 flex flex-col justify-between">
+                            <p class="dark:text-white text-center">
+                                <strong>{{ $u->name }}</strong> solicitó acceso a
+                                <em>{{ $zona->nombre }}</em>
+                                el {{ $u->pivot->fecha_solicitud->format('d/m/Y H:i') }}.
+                            </p>
+                            <div class="mt-4 flex gap-2 justify-center">
+                                <button type="button"
+                                    wire:click="responderSolicitud({{ $zona->id }}, {{ $u->id }}, 'denegado')"
+                                    class="whitespace-nowrap rounded-md bg-red-500 border border-red-500 px-4 py-2 text-sm font-medium tracking-wide text-white transition hover:opacity-75 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-red-500 dark:border-red-500 dark:text-white dark:focus-visible:outline-red-500">
+                                    Denegar
+                                </button>
+
+                                <button type="button"
+                                    wire:click="responderSolicitud({{ $zona->id }}, {{ $u->id }}, 'aceptado')"
+                                    class="whitespace-nowrap rounded-md bg-black border border-black px-4 py-2 text-sm font-medium tracking-wide text-neutral-100 transition hover:opacity-75 text-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-white dark:border-white dark:text-black dark:focus-visible:outline-white">
+                                    Aceptar
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                @endforeach
+            </div>
+        </section>
+    @endif
+
 
     {{-- modal crear zona --}}
     <div x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen"
@@ -335,8 +404,7 @@
                             Validez (días)
                         </label>
                         <div class="flex items-center">
-                            <button type="button"
-                                wire:click="decrementarDias"
+                            <button type="button" wire:click="decrementarDias"
                                 class="flex h-10 items-center justify-center rounded-md bg-neutral-100 px-4 py-2 text-neutral-600 hover:opacity-75"
                                 aria-label="restar días">
                                 <!-- icono menos -->
@@ -349,8 +417,7 @@
                             <input id="shareValidityDays" type="text" readonly x-bind:value="shareValidityDays"
                                 class="h-10 w-20 bg-transparent text-center" />
 
-                            <button type="button"
-                                wire:click="incrementarDias"
+                            <button type="button" wire:click="incrementarDias"
                                 class="flex h-10 items-center justify-center rounded-md bg-neutral-100 px-4 py-2 text-neutral-600 hover:opacity-75"
                                 aria-label="sumar días">
                                 <!-- icono más -->
