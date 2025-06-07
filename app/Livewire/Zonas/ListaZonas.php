@@ -7,6 +7,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Str;
+use App\Models\EnlaceTemporal;
 
 class ListaZonas extends Component
 {
@@ -25,6 +27,15 @@ class ListaZonas extends Component
     public $selectedId = null;
     public $warningModal = false;
 
+
+    // para compartir
+    public $currentInvitationId = null;
+    public $shareModalIsOpen = false;
+    public $shareLink = '';
+    public $shareExpiry = '';
+
+    public $shareValidityDays = 7;
+
     protected $rules = [
         'nombreZona' => 'required|string|max:50',
         'requiereVerificacion' => 'required|boolean',
@@ -38,6 +49,56 @@ class ListaZonas extends Component
     {
         $this->resetForm();
         $this->showModal = true;
+    }
+
+    public function abrirCompartirZona($zonaId) {
+        $this->selectedId = $zonaId;
+        $this->shareLink = '';
+        $this->shareExpiry = '';
+        $this->shareValidityDays = 1;
+        $this->currentInvitationId = null;
+
+        $this->generarEnlaceZona();
+
+        $this->shareModalIsOpen = true;
+    }
+
+    public function generarEnlaceZona()
+    {
+        // Si ya existe, lo recuperamos
+        if ($this->currentInvitationId) {
+            $inv = EnlaceTemporal::findOrFail($this->currentInvitationId);
+            $inv->update([
+                'expira_en' => now()->addDays($this->shareValidityDays),
+                'usado' => false,
+            ]);
+        } else {
+            $token = Str::random(40);
+
+            $inv = EnlaceTemporal::create([
+                'zona_id' => $this->selectedId,
+                'token' => $token,
+                'expira_en' => now()->addDays($this->shareValidityDays),
+                'usado' => false,
+            ]);
+
+            $this->currentInvitationId = $inv->id;
+        }
+
+        $this->shareLink = route('zonas.invitar.aceptar', $inv->token);
+        $this->shareExpiry = $inv->expira_en->format('d/m/Y H:i');
+    }
+
+    public function incrementarDias()
+    {
+        $this->shareValidityDays = min(10, $this->shareValidityDays + 1);
+        $this->generarEnlaceZona();
+    }
+
+    public function decrementarDias()
+    {
+        $this->shareValidityDays = max(1, $this->shareValidityDays - 1);
+        $this->generarEnlaceZona();
     }
 
     public function crearZona()

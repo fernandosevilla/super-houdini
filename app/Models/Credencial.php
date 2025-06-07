@@ -45,10 +45,6 @@ class Credencial extends Model
         return $this->hasMany(Rotacion::class);
     }
 
-    public function enlaces_temporales() {
-        return $this->hasMany(EnlaceTemporal::class);
-    }
-
     // helpers
     public function scopeDueForRotation($query) {
         return $query->whereRaw(

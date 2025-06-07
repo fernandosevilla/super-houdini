@@ -13,8 +13,8 @@ class EnlaceTemporal extends Model
     protected $table = 'enlaces_temporales';
 
     protected $fillable = [
-        'credencial_id',
-        'hash_seguro',
+        'zona_id',
+        'token',
         'expira_en',
         'usado',
     ];
@@ -25,7 +25,7 @@ class EnlaceTemporal extends Model
     ];
 
     // Relaciones
-    public function credencial() {
-        return $this->belongsTo(Credencial::class);
+    public function zona() {
+        return $this->belongsTo(Zona::class);
     }
 }

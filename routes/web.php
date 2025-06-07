@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Zona;
+use App\Http\Controllers\ZonaInvitacionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,6 +28,12 @@ Route::middleware(['auth'])->group(function () {
         return view('zonas.show', compact('zona'));
     })->name('zonas.show');
 });
+
+
+Route::get('zonas/invitacion/{token}',
+    [ZonaInvitacionController::class, 'aceptar'])
+    ->name('zonas.invitar.aceptar')
+    ->middleware('auth');
 
 
 require __DIR__.'/auth.php';

@@ -53,6 +53,7 @@ class User extends Authenticatable
      */
     public function zonas() {
         return $this->belongsToMany(Zona::class, 'zona_usuario')
+                    ->using(ZonaUsuario::class)
                     ->withPivot('estado', 'fecha_solicitud', 'fecha_respuesta')
                     ->withTimestamps();
     }

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('enlaces_temporales', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('credencial_id')->constrained('credenciales')->onDelete('cascade');
+            $table->foreignId('zona_id')->constrained('zonas')->onDelete('cascade');
 
-            $table->string('hash_seguro', 255)->unique();
+            $table->string('token', 255)->unique();
             $table->dateTime('expira_en');
             $table->boolean('usado')->default(false);
 
