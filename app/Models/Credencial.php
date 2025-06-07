@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Credencial extends Model
 {
@@ -46,5 +47,30 @@ class Credencial extends Model
 
     public function enlaces_temporales() {
         return $this->hasMany(EnlaceTemporal::class);
+    }
+
+    // helpers
+    public function scopeDueForRotation($query) {
+        return $query->whereRaw(
+            "fecha_ultima_rotacion <= DATE_SUB(NOW(), INTERVAL rotacion_cada_dias DAY)"
+        );
+    }
+
+    public function getDiasParaRotacionAttribute(): int
+    {
+        $fechaUltima = $this->fecha_ultima_rotacion->copy();
+        $proxima = $fechaUltima->addDays($this->rotacion_cada_dias);
+
+        $hoy = Carbon::today();
+
+        if ($proxima->gt($hoy)) {
+            return $hoy->diffInDays($proxima);
+        }
+
+        if ($proxima->eq($hoy)) {
+            return 0;
+        }
+
+        return - $proxima->diffInDays($hoy);
     }
 }
