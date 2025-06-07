@@ -16,7 +16,7 @@
 
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/test.js'])
     @endif
 </head>
 
@@ -63,6 +63,17 @@
                             focus-visible:outline-black active:opacity-100 active:outline-offset-0
                             dark:bg-white dark:border-white dark:text-black dark:focus-visible:outline-white">
                     Iniciar sesión
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('register') }}"
+                    class="whitespace-nowrap rounded-md bg-neutral-100 border border-neutral-100 px-4 py-2
+                            text-sm font-medium tracking-wide text-neutral-900 transition hover:opacity-75
+                            text-center focus-visible:outline-2 focus-visible:outline-offset-2
+                            focus-visible:outline-neutral-100 active:opacity-100 active:outline-offset-0
+                            dark:bg-neutral-800 dark:border-neutral-800 dark:text-white dark:focus-visible:outline-neutral-800">
+                    Registrarse
                 </a>
             </li>
         </ul>
@@ -118,6 +129,16 @@
                             dark:bg-white dark:border-white dark:text-black
                             dark:focus-visible:outline-white">
                     Iniciar sesión
+                </a>
+
+                <a href="{{ route('register') }}"
+                    class="mt-4 rounded-md bg-neutral-100 border border-neutral-100 px-4 py-2 block text-center
+                            font-medium tracking-wide text-neutral-900 hover:opacity-75
+                            focus-visible:outline-2 focus-visible:outline-offset-2
+                            focus-visible:outline-neutral-100 active:opacity-100 active:outline-offset-0
+                            dark:bg-neutral-800 dark:border-neutral-800 dark:text-white dark:focus-visible:outline-neutral-800">
+
+                    Registrarse
                 </a>
             </li>
         </ul>
@@ -211,7 +232,6 @@
                         <button type="button" @click="copy()"
                             class="rounded-md bg-black border border-black px-2 py-2 text-sm font-medium tracking-wide text-neutral-100 hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black active:opacity-100 active:outline-offset-0 disabled:opacity-75 disabled:cursor-not-allowed dark:bg-white dark:border-white dark:text-black dark:focus-visible:outline-white">Copiar</button>
 
-                        <div class="flex w-full items-center gap-4 text-neutral-600 dark:text-neutral-300">
 
                             <label for="rangeSlider" class="sr-only">Brightness</label>
                             <input x-model="length" id="rangeSlider" type="range" min="8" max="50"
@@ -228,7 +248,6 @@
                                     rounded-full" />
                             <span class="w-10 text-lg font-bold text-neutral-900 dark:text-white"
                                 x-text="length"></span>
-                        </div>
 
                         <h3 class="mb-2 pl-1 font-semibold text-neutral-900 dark:text-white">Incluir</h3>
 
@@ -303,7 +322,7 @@
                                                 d="M4.5 12.75l6 6 9-13.5" />
                                         </svg>
                                     </span>
-                                    <span>Caracteres especiales</span>
+                                    <span>C. Especiales</span>
                                 </label>
                             </li>
                         </ul>
@@ -336,7 +355,8 @@
         </h2>
 
         <article
-            class="group flex rounded-md max-w-xs flex-col overflow-hidden bg-neutral-50 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300">
+            class="group flex rounded-md max-w-xs flex-col overflow-hidden bg-neutral-50 text-neutral-600
+                    dark:bg-neutral-900 dark:text-neutral-300">
             <!-- Images -->
             <div class="relative h-36">
                 <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG1jb2t4bGkwajU0dDBhY2RucmV5Z3owN2poa2RscDBianRycGZwaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wguPsH9cpTJPRH8Yxp/giphy.gif"
@@ -348,7 +368,7 @@
                         alt="avatar" />
                 </div>
             </div>
-            <!-- Body -->
+
             <div class="flex flex-col gap-2 p-6 text-center mt-12">
                 <h3 class="text-balance text-xl font-bold text-neutral-900 lg:text-2xl dark:text-white"
                     aria-describedby="profileDescription">
@@ -372,23 +392,38 @@
                     <a href="mailto:fernando.sevillaespinosa@gmail.com"
                         class="text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white"
                         aria-label="email">
-                        <!-- ícono SVG -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-7 shrink-0">
+                            <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
+                            <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
+                        </svg>
                     </a>
+
                     <!-- Linkedin -->
-                    <a href="https://www.linkedin.com" target="_blank"
+                    <a href="https://www.linkedin.com/in/fernandosevillaespinosa" target="_blank"
                         class="text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white"
                         aria-label="linkedin">
-                        <!-- ícono SVG -->
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" class="size-6 shrink-0">
+                            <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+                        </svg>
                     </a>
                 </div>
             </div>
         </article>
     </section>
 
+    <section id="contacto" class="my-12">
+        <h2 class="text-3xl font-bold text-center mb-6 dark:text-white">
+            Contacto
+        </h2>
+
+        {{-- @livewire('formulario') --}}
+    </section>
+
     <footer class="p-6 flex items-center justify-center text-center text-sm bg-neutral-50 dark:bg-neutral-900
                     dark:text-neutral-100">
         <p>© {{ date('Y') }} <a href="https://github.com/fernandosevilla" target="_blank">Fernando Sevilla Espinosa</a>. Todos los derechos reservados.</p>
     </footer>
+
 </body>
 
 </html>
