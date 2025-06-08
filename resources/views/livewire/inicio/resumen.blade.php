@@ -21,16 +21,5 @@
             <h2 class="text-lg font-medium dark:text-white">Total de Credenciales Disponibles</h2>
             <p class="text-3xl">{{ $totalCredenciales }}</p>
         </div>
-
-        {{-- <div class="bg-neutral-50 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300 shadow-lg rounded-lg p-4 flex flex-col justify-between hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer">
-            <h2 class="text-lg font-medium dark:text-white">Total de Credenciales</h2>
-            <p class="text-3xl">{{ $totalCredenciales }}</p>
-        </div>
-
-        <div class="bg-neutral-50 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300 shadow-lg rounded-lg p-4 flex flex-col justify-between hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer">
-            <h2 class="text-lg font-medium dark:text-white">Total de Rotaciones</h2>
-            <p class="text-3xl">{{ $totalRotaciones }}</p>
-        </div> --}}
     </div>
-
 </section>

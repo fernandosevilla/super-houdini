@@ -69,4 +69,13 @@ class User extends Authenticatable
     public function rotaciones() {
         return $this->hasMany(Rotacion::class);
     }
+
+    /**
+     * Override default password reset notification.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+    }
+
 }
