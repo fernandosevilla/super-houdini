@@ -57,7 +57,7 @@ Super Houdini es una aplicación web construida con Laravel 12 y MySQL que permi
 
         ```dotenv
         DB_CONNECTION=sqlite
-        DB_DATABASE=${PWD}/database/database.sqlite
+        DB_DATABASE=database/database.sqlite
         DB_FOREIGN_KEYS=true
         ```
      3. Asegúrate de que la extensión SQLite de PHP esté habilitada.
