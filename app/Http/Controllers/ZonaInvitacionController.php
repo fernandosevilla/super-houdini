@@ -13,6 +13,10 @@ class ZonaInvitacionController extends Controller
             ->where('usado', false)
             ->firstOrFail();
 
+        if ($inv->expira_en->isPast()) {
+            abort(404);
+        }
+
         $zona = $inv->zona;
         $usuario = Auth::user();
 
