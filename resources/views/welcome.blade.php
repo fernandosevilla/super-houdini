@@ -46,14 +46,14 @@
                     Sobre mi
                 </a>
             </li>
-            <li>
+            {{-- <li>
                 <a href="#contacto"
                     class="font-medium text-neutral-600 underline-offset-2
                             hover:text-black focus:outline-hidden focus:underline
                             dark:text-neutral-300 dark:hover:text-white">
                     Contacto
                 </a>
-            </li>
+            </li> --}}
             <!-- CTA Button -->
             <li>
                 <a href="{{ route('login') }}"
@@ -113,12 +113,12 @@
                     Sobre mi
                 </a>
             </li>
-            <li class="py-4">
+            {{-- <li class="py-4">
                 <a href="#contacto"
                     class="w-full text-lg font-medium text-neutral-600 focus:underline dark:text-neutral-300">
                     Contacto
                 </a>
-            </li>
+            </li> --}}
             <!-- CTA Button -->
             <li class="mt-4 w-full border-none">
                 <a href="{{ route('login') }}"
@@ -411,13 +411,13 @@
         </article>
     </section>
 
-    <section id="contacto" class="my-12">
+    {{-- <section id="contacto" class="my-12">
         <h2 class="text-3xl font-bold text-center mb-6 dark:text-white">
             Contacto
         </h2>
 
-        {{-- @livewire('formulario') --}}
-    </section>
+        @livewire('formulario')
+    </section> --}}
 
     <footer class="p-6 flex items-center justify-center text-center text-sm bg-neutral-50 dark:bg-neutral-900
                     dark:text-neutral-100">
