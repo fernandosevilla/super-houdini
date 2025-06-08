@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Zona;
+use App\Http\Controllers\ZonaInvitacionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,5 +18,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/zonas', function () {
+        return view('zonas.index');
+    })->name('zonas.index');
+
+    Route::get('/zonas/{zona}', function (Zona $zona) {
+        return view('zonas.show', compact('zona'));
+    })->name('zonas.show');
+});
+
+
+Route::get('zonas/invitacion/{token}',
+    [ZonaInvitacionController::class, 'aceptar'])
+    ->name('zonas.invitar.aceptar')
+    ->middleware('auth');
+
 
 require __DIR__.'/auth.php';

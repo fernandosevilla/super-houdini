@@ -45,4 +45,37 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Relaciones
+
+    /**
+     * Relación con Zona
+     */
+    public function zonas() {
+        return $this->belongsToMany(Zona::class, 'zona_usuario')
+                    ->using(ZonaUsuario::class)
+                    ->withPivot('estado', 'fecha_solicitud', 'fecha_respuesta')
+                    ->withTimestamps();
+    }
+
+    public function zonas_creadas() {
+        return $this->hasMany(Zona::class, 'user_id');
+    }
+
+    public function credenciales() {
+        return $this->hasMany(Credencial::class, 'creado_por');
+    }
+
+    public function rotaciones() {
+        return $this->hasMany(Rotacion::class);
+    }
+
+    /**
+     * Override default password reset notification.
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPasswordNotification($token));
+    }
+
 }

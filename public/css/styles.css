@@ -1,0 +1,15 @@
+.header-landing {
+    height: calc(100vh - 4rem);
+    background-image: url('../img/fondo_welcome_page.webp');
+    background-size: cover;
+    background-position: center;
+
+    background-color: rgba(0, 0, 0, 0.4);
+    background-blend-mode: darken;
+}
+
+@media (max-width: 768px) {
+    .header-landing {
+        min-height: calc(100vh-8rem);
+    }
+}
