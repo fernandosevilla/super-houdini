@@ -13,18 +13,28 @@ class Resumen extends Component
     public $totalZonas;
     public $totalZonasCompartidas;
     public $totalCredenciales;
-    public $totalRotaciones;
+    // public $totalRotaciones;
 
     public function mount()
     {
         $this->totalZonas = Zona::where('user_id', Auth::id())->count();
 
-        $this->totalZonasCompartidas = Zona::whereHas('usuarios', function($q) {
-            $q->where('user_id', '!=', Auth::id());
-        })->count();
+        $this->totalZonasCompartidas = Zona::where('user_id', '!=', Auth::id())
+            ->whereHas('usuarios', function ($q) {
+                $q->where('user_id', Auth::id());
+            })
+            ->count();
 
-        $this->totalCredenciales = Credencial::count();
-        $this->totalRotaciones = Rotacion::count();
+        $this->totalCredenciales = Credencial::where(function ($query) {
+            $query->where('user_id', Auth::id())
+                ->orWhereHas('zona', function ($q) {
+                    $q->where('user_id', Auth::id());
+                })
+                ->orWhereHas('zona.usuarios', function ($q) {
+                    $q->where('user_id', Auth::id());
+                });
+        })->count();
+        // $this->totalRotaciones = Rotacion::count();
     }
 
     public function render()

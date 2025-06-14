@@ -173,7 +173,7 @@ class ListaZonas extends Component
         $zona = Zona::findOrFail($zonaId);
         $this->authorize('update', $zona);
 
-        if ($respuesta === 'rechazado') {
+        if ($respuesta === 'denegado') {
             $zona->usuarios()->detach($userId);
         } else {
             $zona->usuarios()->updateExistingPivot($userId, [
