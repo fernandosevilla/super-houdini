@@ -6,19 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Super Houdini</title>
+    <meta name="description" content="Super Houdini es el generador de contraseñas seguro e inteligente con funciones de compartir y rotar contraseñas">
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <!-- Preload background image (mejora el LCP) -->
+    <link rel="preload" as="image" href="{{ asset('img/fondo_welcome_page.webp') }}" />
 
-    <!-- Styles / Scripts -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+    <!-- Styles -->
+    <style>
+        .header-landing {
+            height: calc(100vh - 4rem);
+            background-image: url('../img/fondo_welcome_page.webp');
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(0, 0, 0, 0.4);
+            background-blend-mode: darken;
+        }
+
+        @media (max-width: 768px) {
+            .header-landing {
+                min-height: auto;
+            }
+        }
+    </style>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 
 <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18]">
     <nav x-data="{ mobileMenuIsOpen: false }" x-on:click.away="mobileMenuIsOpen = false"
@@ -214,10 +232,10 @@
                             dark:bg-neutral-900 dark:text-neutral-300"
                     x-init="generate()">
                     <div class="flex flex-col justify-center p-6 space-y-4">
-                        <h3 class="text-center text-balance text-xl font-bold text-neutral-900 lg:text-2xl dark:text-white"
+                        <h2 class="text-center text-balance text-xl font-bold text-neutral-900 lg:text-2xl dark:text-white"
                             aria-describedby="articleDescription">
                             Genera tu contraseña
-                        </h3>
+                        </h2>
 
                         <p id="articleDescription" class="my-4 max-w-lg text-pretty text-sm text-center">
                             Genera contraseñas seguras y únicas para tus cuentas.
@@ -346,8 +364,6 @@
         </div>
     </header>
 
-
-
     <section id="sobreMi" class="m-12 flex flex-col items-center justify-center">
         <!-- Título centrado -->
         <h2 class="text-3xl font-bold text-center mb-6 dark:text-white">
@@ -359,13 +375,21 @@
                     dark:bg-neutral-900 dark:text-neutral-300">
             <!-- Images -->
             <div class="relative h-36">
-                <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMG1jb2t4bGkwajU0dDBhY2RucmV5Z3owN2poa2RscDBianRycGZwaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wguPsH9cpTJPRH8Yxp/giphy.gif"
-                    class="h-full w-full object-cover" alt="cover photo" />
+                <img src="{{ asset('img/sobreMi_animado.webp') }}"
+                    width="1920" height="540"
+                    class="h-full w-full object-cover"
+                    alt="cover photo"
+                    loading="lazy" />
+
                 <div
                     class="relative z-10 mx-auto -mt-14 size-28 overflow-hidden rounded-full border-4 border-neutral-50 dark:border-neutral-900">
-                    <img src="{{ asset('img/yo.jpg') }}"
-                        class="h-full object-cover transition duration-700 ease-out group-hover:scale-105"
-                        alt="avatar" />
+                    <img
+                        src="{{ asset('img/yo.webp') }}"
+                        width="112"
+                        height="112"
+                        class="object-cover transition duration-700 ease-out group-hover:scale-105"
+                        alt="avatar"
+                    />
                 </div>
             </div>
 
